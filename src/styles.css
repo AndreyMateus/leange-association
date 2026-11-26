@@ -856,7 +856,8 @@ h3 {
   letter-spacing: 0.13em;
 }
 
-.creator-form__heading h2 {
+.creator-form__heading h2,
+.creator-form__heading h3 {
   margin: 0;
   font-family: var(--font-comfortaa);
   font-size: 1.25rem;
@@ -2617,7 +2618,7 @@ body {
   list-style: none;
 }
 
-.site-nav__links a {
+.site-nav__links .site-nav__link {
   position: relative;
   z-index: 1;
   display: inline-flex;
@@ -2632,11 +2633,11 @@ body {
   transition: color 250ms ease;
 }
 
-.site-nav__links a:hover {
+.site-nav__links .site-nav__link:hover {
   color: var(--color-black);
 }
 
-.site-nav__links a.is-active {
+.site-nav__links .site-nav__link.is-active {
   color: var(--color-forest);
 }
 
@@ -2694,18 +2695,18 @@ body {
 }
 
 @media (max-width: 860px) {
-  .site-nav__links a { padding-inline: 0.75rem; }
+  .site-nav__links .site-nav__link { padding-inline: 0.75rem; }
 }
 
 @media (max-width: 700px) {
   .site-nav { gap: 0.4rem; padding-left: 0.4rem; }
   .site-nav__cta { display: none; }
   .site-nav__links { flex: 1; justify-content: space-between; }
-  .site-nav__links a { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+  .site-nav__links .site-nav__link { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
 }
 
 @media (max-width: 370px) {
-  .site-nav__links a { padding-inline: 0.5rem; font-size: 0.75rem; }
+  .site-nav__links .site-nav__link { padding-inline: 0.5rem; font-size: 0.75rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3453,7 +3454,7 @@ main > section:first-child.section-pad {
   background: transparent;
 }
 
-.site-nav__links a {
+.site-nav__links .site-nav__link {
   min-height: 38px;
   padding: 0.35rem 0.85rem;
   color: #6a6c64;
@@ -3461,7 +3462,7 @@ main > section:first-child.section-pad {
   font-weight: 700;
 }
 
-.site-nav__links a.is-active {
+.site-nav__links .site-nav__link.is-active {
   color: var(--color-black);
 }
 
@@ -3696,7 +3697,7 @@ main > section:first-child.section-pad {
     gap: 0.15rem;
   }
 
-  .site-nav__links a {
+  .site-nav__links .site-nav__link {
     display: flex;
     min-height: 48px;
     padding: 0.7rem 1rem;
@@ -3704,7 +3705,7 @@ main > section:first-child.section-pad {
     font-size: 1rem;
   }
 
-  .site-nav__links a.is-active {
+  .site-nav__links .site-nav__link.is-active {
     background: var(--color-cream);
   }
 
@@ -3838,4 +3839,28 @@ main > section:first-child.section-pad {
   .help-chat__avatar { width: 2rem; height: 2rem; }
   .help-chat__coming-soon { display: none; }
   .help-chat__composer { margin-top: 0.3rem; padding-top: 0.5rem; }
+}
+
+/* Itens do menu são botões (rolagem por JavaScript): visual igual ao dos links */
+.site-nav__link {
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.site-nav__link:focus-visible,
+.site-nav__cta:focus-visible {
+  outline: 3px solid var(--color-blue-f);
+  outline-offset: 2px;
+}
+
+button.site-nav__cta {
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.creator-form__heading h3 {
+  margin: 0;
 }

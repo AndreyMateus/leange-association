@@ -26,12 +26,6 @@ const pages = {
     description: 'Conheça a Le Ange Mar em Búzios: Praia Rasa a cerca de 150 metros, piscina com vista para o oceano e uma parceria remunerada para creators pet.',
     image: 'https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/e0715e71-0836-4817-640d-a92472a02600/public',
   },
-  '/candidatura/serra': {
-    title: 'Candidatura Le Ange Serra | Programa Creators',
-    description: 'Apresente seu perfil e converse com a equipe sobre uma parceria remunerada com a Le Ange Serra.',
-    image: 'https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/25b0380d-b983-4a67-eac2-36a003dfa600/public',
-    noIndex: true,
-  },
   '/candidatura/mar': {
     title: 'Candidatura Le Ange Mar | Programa Creators',
     description: 'Apresente seu perfil e converse com a equipe sobre uma parceria remunerada com a Le Ange Mar.',
@@ -109,6 +103,14 @@ const server = createServer(async (request, response) => {
     response.statusCode = 200;
     response.setHeader('content-type', 'application/xml; charset=utf-8');
     response.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapEntries}</urlset>`);
+    return;
+  }
+
+  // A página /candidatura/serra foi removida: o formulário agora fica na própria landing.
+  if (requestUrl.pathname.replace(/\/+$/, '') === '/candidatura/serra') {
+    response.statusCode = 301;
+    response.setHeader('location', '/serra?secao=candidatura');
+    response.end();
     return;
   }
 

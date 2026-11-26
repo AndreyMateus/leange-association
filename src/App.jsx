@@ -214,7 +214,7 @@ function UnitSlide({ unitId, index }) {
             {details.highlights.slice(0, 3).map((item) => <li key={item}><Icon name="check" /> {item}</li>)}
           </ul>
           <div className="unit-slide__actions">
-            <a className={`button button--cta button--cta-${unitId}`} href={`/candidatura/${unitId}`}><span className="button__coin" aria-hidden="true"><Icon name="coin" /></span>Quero criar {unitId === 'mar' ? 'no Mar' : 'na Serra'} <Icon name="arrow" /></a>
+            <a className={`button button--cta button--cta-${unitId}`} href={`/${unitId}?secao=candidatura`} data-scroll-to="candidatura" data-unit={unitId}><span className="button__coin" aria-hidden="true"><Icon name="coin" /></span>Quero criar {unitId === 'mar' ? 'no Mar' : 'na Serra'} <Icon name="arrow" /></a>
             <a className="unit-slide__link" href={unit.petPolicy} target="_blank" rel="noopener noreferrer">Política pet</a>
           </div>
         </div>
@@ -474,7 +474,7 @@ function toggleFaqItem(event) {
 
 function FrequentlyAskedQuestions({ unit }) {
   return (
-    <section className="faq-section section-pad" id="duvidas" aria-labelledby="faq-title">
+    <section className="faq-section section-pad" id="duvidas" data-scroll-section="duvidas" aria-labelledby="faq-title">
       <div className="faq-layout page-shell">
         <header className="faq-intro" {...flowt('float-right')}>
           <p className="eyebrow eyebrow--green"><span className="eyebrow__dot"></span> Antes de dar o próximo passo</p>
@@ -780,9 +780,9 @@ function CreatorMarquee() {
   );
 }
 
-function PartnershipSection({ unit, applicationHref }) {
+function PartnershipSection({ unit, applyLink }) {
   return (
-    <section className="partnership-section section-pad" id="vantagens" aria-labelledby="partnership-title">
+    <section className="partnership-section section-pad" id="vantagens" data-scroll-section="vantagens" aria-labelledby="partnership-title">
       <div className="partnership-top page-shell">
         <header className="partnership-intro" {...flowt('float-right')}>
           <p className="eyebrow eyebrow--light"><span className="eyebrow__dot"></span> Parceria remunerada para creators pet</p>
@@ -808,7 +808,7 @@ function PartnershipSection({ unit, applicationHref }) {
             </ol>
             <footer className="creator-pass__foot">
               <span className="creator-pass__code" aria-hidden="true"></span>
-              <a className="button button--dark" href={applicationHref}>Apresentar meu perfil <Icon name="arrow" /></a>
+              <a className="button button--dark" {...applyLink}>Apresentar meu perfil <Icon name="arrow" /></a>
             </footer>
           </div>
         </article>
@@ -818,13 +818,16 @@ function PartnershipSection({ unit, applicationHref }) {
   );
 }
 
-function ApplicationRoute({ unit, onSubmit, whatsAppDraft }) {
+// Formulário de candidatura: fica na própria landing (seção "candidatura").
+// A pessoa escolhe a unidade no formulário; o padrão é a unidade da página.
+function ApplicationSection({ unit, onSubmit, whatsAppDraft, standalone = false }) {
+  const Title = standalone ? 'h1' : 'h2';
   return (
-    <section className="application-section section-pad" aria-labelledby="application-title">
+    <section className="application-section section-pad" id="candidatura" data-scroll-section="candidatura" aria-labelledby="application-title">
       <div className="application-grid page-shell">
         <div className="application-copy">
           <p className="eyebrow eyebrow--green"><span className="eyebrow__dot"></span> Um primeiro passo, sem complicação</p>
-          <h1 id="application-title">Vamos imaginar essa parceria <em>juntos?</em></h1>
+          <Title id="application-title">Vamos imaginar essa parceria <em>juntos?</em></Title>
           <p>Conte um pouco sobre você e seu conteúdo. Nossa equipe conversa com você sobre unidade, formato, disponibilidade e remuneração.</p>
           <ol className="next-steps">
             <li><span>1</span><span><strong>Você se apresenta</strong><small>Compartilhe seu perfil e o tipo de conteúdo que cria.</small></span></li>
@@ -834,8 +837,8 @@ function ApplicationRoute({ unit, onSubmit, whatsAppDraft }) {
           <p className="application-privacy">A mensagem ficará preenchida no WhatsApp para você revisar antes de enviá-la à equipe.</p>
         </div>
         <form className="creator-form" onSubmit={onSubmit}>
-          <div className="creator-form__heading"><span className="form-icon"><Icon name="paw" /></span><div><p>PROGRAMA LE ANGE CREATORS</p><h2>Conte sua história</h2></div></div>
-          <input type="hidden" name="unidade" value={unit.name} />
+          <div className="creator-form__heading"><span className="form-icon"><Icon name="paw" /></span><div><p>PROGRAMA LE ANGE CREATORS</p><h3>Conte sua história</h3></div></div>
+          <div className="form-field"><label htmlFor="unit">Unidade de interesse</label><select id="unit" name="unidade" defaultValue={unit.name}>{Object.values(units).map((item) => <option key={item.id} value={item.name}>{item.name} · {item.place}</option>)}</select></div>
           <div className="form-field"><label htmlFor="name">Como podemos chamar você?</label><input id="name" name="nome" autoComplete="name" placeholder="Seu nome" required /></div>
           <div className="form-row">
             <div className="form-field"><label htmlFor="whatsapp">Seu WhatsApp</label><input id="whatsapp" name="whatsapp" type="tel" autoComplete="tel" placeholder="(00) 00000-0000" required /></div>
@@ -886,7 +889,7 @@ function animateScrollTo(targetTop) {
 }
 
 function scrollToSection(id, { focus = true } = {}) {
-  const target = document.getElementById(id);
+  const target = document.querySelector(`[data-scroll-section="${id}"]`) || document.getElementById(id);
   if (!target) return false;
   const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0;
   animateScrollTo(window.scrollY + target.getBoundingClientRect().top - headerHeight - 8);
@@ -928,9 +931,13 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
     };
   }, [menuOpen]);
   const copyrightYear = new Date().getFullYear();
-  const applicationHref = `/candidatura/${selected}`;
   const sectionHref = (section) => `/${selected}?secao=${section}`;
   const scrollLink = (section) => ({ href: sectionHref(section), 'data-scroll-to': section });
+  // Menu: rola por JavaScript até a seção; se ela não existir nesta página, abre a landing já na seção.
+  const goToSection = (section) => {
+    setMenuOpen(false);
+    if (!scrollToSection(section)) window.location.assign(sectionHref(section));
+  };
 
   useEffect(() => {
     const header = document.querySelector('.site-header');
@@ -958,15 +965,20 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
       const link = event.target.closest('[data-scroll-to]');
       if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       // Na página de candidatura a seção não existe: o link segue para /serra?secao=..., que rola ao carregar.
-      if (!document.getElementById(link.dataset.scrollTo)) return;
+      const section = link.dataset.scrollTo;
+      if (!document.querySelector(`[data-scroll-section="${section}"]`) && !document.getElementById(section)) return;
       event.preventDefault();
-      scrollToSection(link.dataset.scrollTo);
+      if (link.dataset.unit) {
+        const unitSelect = document.querySelector('#unit');
+        if (unitSelect) unitSelect.value = units[link.dataset.unit]?.name || unitSelect.value;
+      }
+      scrollToSection(section);
     };
 
     // Menu: um indicador verde desliza até o link da seção visível (scroll-spy).
     const navList = document.querySelector('.site-nav__links');
     const navIndicator = navList?.querySelector('.site-nav__indicator');
-    const navLinks = Array.from(navList?.querySelectorAll('a[data-section]') || []);
+    const navLinks = Array.from(navList?.querySelectorAll('[data-section]:not(.site-nav__indicator)') || []);
     let activeSection = null;
     const placeIndicator = () => {
       if (!navIndicator) return;
@@ -985,17 +997,17 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
       navLinks.forEach((link) => {
         const isActive = link.dataset.section === id;
         link.classList.toggle('is-active', isActive);
-        if (isActive) link.setAttribute('aria-current', 'location');
+        if (isActive) link.setAttribute('aria-current', 'true');
         else link.removeAttribute('aria-current');
       });
       placeIndicator();
     };
-    const spySections = navLinks.map((link) => document.getElementById(link.dataset.section)).filter(Boolean);
+    const spySections = navLinks.map((link) => document.querySelector(`[data-scroll-section="${link.dataset.section}"]`)).filter(Boolean);
     let sectionSpy;
     if (spySections.length && 'IntersectionObserver' in window) {
       sectionSpy = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
+          if (entry.isIntersecting) setActiveSection(entry.target.dataset.scrollSection);
         });
       }, { rootMargin: '-40% 0px -55% 0px' });
       spySections.forEach((section) => sectionSpy.observe(section));
@@ -1056,7 +1068,7 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
     const lines = [
       'Oi, Le Ange! Quero conversar sobre uma parceria como creator pet.',
       '',
-      `Unidade de interesse: ${unit.name}`,
+      `Unidade de interesse: ${form.get('unidade') || unit.name}`,
       `Meu nome: ${form.get('nome')}`,
       `Meu WhatsApp: ${form.get('whatsapp')}`,
       `Meu perfil: ${form.get('perfil')}`,
@@ -1076,7 +1088,7 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
       <header className="site-header">
         <div className="site-header__inner page-shell">
           <nav className={`site-nav${menuOpen ? ' is-open' : ''}`} aria-label="Navegação principal" ref={navRef}>
-            <a className="brand" {...scrollLink('quem-somos')} aria-label="Le Ange Creators, início">
+            <a className="brand" href={`/${selected}`} onClick={(event) => { if (applicationPage || event.metaKey || event.ctrlKey) return; event.preventDefault(); setMenuOpen(false); animateScrollTo(0); }} aria-label="Le Ange Creators, início">
               <span className="brand__mark"><img src={brandIcon} alt="" width="40" height="40" /></span>
             </a>
             <button
@@ -1089,25 +1101,25 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
             >
               <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
             </button>
-            <div className="site-nav__menu" id="site-nav-menu" onClick={(event) => { if (event.target.closest('a')) setMenuOpen(false); }}>
+            <div className="site-nav__menu" id="site-nav-menu">
             <ul className="site-nav__links">
               <li className="site-nav__indicator" aria-hidden="true"></li>
-              <li><a {...scrollLink('quem-somos')} data-section={applicationPage ? undefined : 'quem-somos'}>Quem somos</a></li>
-              <li><a {...scrollLink('vantagens')} data-section={applicationPage ? undefined : 'vantagens'}>Parceria</a></li>
-              <li><a {...scrollLink('duvidas')} data-section={applicationPage ? undefined : 'duvidas'}>Dúvidas</a></li>
+              {[['quem-somos', 'Quem somos'], ['vantagens', 'Parceria'], ['duvidas', 'Dúvidas']].map(([section, label]) => (
+                <li key={section}><button type="button" className="site-nav__link" data-section={section} onClick={() => goToSection(section)}>{label}</button></li>
+              ))}
             </ul>
-            <a className="site-nav__cta" href={applicationHref}>
+            <button type="button" className="site-nav__cta" onClick={() => goToSection('candidatura')}>
               <span className="site-nav__coin" aria-hidden="true"><Icon name="coin" /></span>
               <span>Seja parceiro</span>
-            </a>
+            </button>
             </div>
           </nav>
         </div>
       </header>
 
-      <main id="conteudo">
-        {applicationPage ? <ApplicationRoute unit={unit} onSubmit={handleApplication} whatsAppDraft={whatsAppDraft} /> : <>
-        <section className="brand-story section-pad" id="quem-somos" aria-labelledby="brand-story-title">
+      <main id="conteudo" data-scroll-section="conteudo">
+        {applicationPage ? <ApplicationSection unit={unit} onSubmit={handleApplication} whatsAppDraft={whatsAppDraft} standalone /> : <>
+        <section className="brand-story section-pad" id="quem-somos" data-scroll-section="quem-somos" aria-labelledby="brand-story-title">
           <div className="brand-story__inner page-shell">
             <div className="brand-story__copy">
               <h1 id="brand-story-title">Torne-se um <em>parceiro da Le Ange.</em></h1>
@@ -1123,18 +1135,11 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
         <PhotoGrid unit={unit} />
         <UnitScroller />
 
-        <PartnershipSection unit={unit} applicationHref={applicationHref} />
+        <PartnershipSection unit={unit} applyLink={scrollLink('candidatura')} />
 
         <FrequentlyAskedQuestions unit={unit} />
 
-        <section className="application-cta-section section-pad" id="candidatura" aria-labelledby="application-cta-title">
-          <div className="application-cta-card page-shell" {...flowt('pop-up')}>
-            <p className="eyebrow eyebrow--light"><span className="eyebrow__dot"></span> Seu próximo passo</p>
-            <h2 id="application-cta-title">Vamos imaginar essa parceria <em>juntos?</em></h2>
-            <p>Conte um pouco sobre você, seu pet e seu conteúdo. A candidatura abre em uma página própria para você preencher com calma.</p>
-            <a className="button button--light" href={applicationHref}>Ir para o formulário <Icon name="arrow" /></a>
-          </div>
-        </section>
+        <ApplicationSection unit={unit} onSubmit={handleApplication} whatsAppDraft={whatsAppDraft} />
         </>}
       </main>
 
@@ -1147,7 +1152,7 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
                 <li><a {...scrollLink('quem-somos')}>Quem somos</a></li>
                 <li><a {...scrollLink('vantagens')}>A parceria</a></li>
                 <li><a {...scrollLink('duvidas')}>Dúvidas frequentes</a></li>
-                <li><a href={applicationHref}>Candidatar-se</a></li>
+                <li><a {...scrollLink('candidatura')}>Candidatar-se</a></li>
               </ul>
               <ul className="site-footer__list site-footer__list--muted">
                 <li><a href="/serra">Le Ange Serra</a></li>
