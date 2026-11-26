@@ -3577,3 +3577,96 @@ button.site-nav__cta {
   cursor: pointer;
 }
 
+
+/*
+  Cartões no estilo da rede social do creator: fundo tingido, borda, capa, avatar, selo da rede,
+  pet e link usam a cor da marca (--brand) ou a cor de destaque (--accent) nas marcas pretas.
+*/
+.creator-card--network {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, #1b2723) 0%, #1b2723 75%);
+}
+
+.creator-card--network.creator-card--template {
+  border-style: dashed;
+}
+
+.creator-card--network .creator-card__cover {
+  background:
+    radial-gradient(circle at 85% 20%, rgb(255 255 255 / 28%), transparent 45%),
+    linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 62%, #ffffff));
+}
+
+.creator-card--network .creator-card__avatar {
+  border-color: #1b2723;
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.creator-card--network.creator-card--template .creator-card__avatar {
+  border-style: solid;
+}
+
+.creator-card--network .creator-card__pet,
+.creator-card--network .creator-card__quote p::before,
+.creator-card--network .creator-card__link,
+.creator-card--network:hover .creator-card__link {
+  color: var(--accent);
+}
+
+.creator-card--network:hover,
+.creator-card--network:focus-within {
+  border-color: var(--accent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 34%, #1b2723) 0%, #1b2723 80%);
+}
+
+.creator-card__network {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+  padding: 0.22rem 0.6rem 0.22rem 0.45rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.creator-card__network svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: currentColor;
+}
+
+/* Instagram: degradê da marca na capa, no avatar e no selo */
+.creator-card--instagram .creator-card__network {
+  background: linear-gradient(45deg, #fa7e1e, #d62976 55%, #962fbf);
+  color: #ffffff;
+}
+
+/* TikTok: preto com as bordas ciano e rosa da marca */
+.creator-card--tiktok .creator-card__cover {
+  background:
+    radial-gradient(circle at 15% 110%, rgb(254 44 85 / 75%), transparent 45%),
+    radial-gradient(circle at 95% 0%, rgb(37 244 238 / 70%), transparent 45%),
+    #010101;
+}
+
+.creator-card--tiktok .creator-card__avatar {
+  box-shadow: -2px -2px 0 #25F4EE, 2px 2px 0 #FE2C55;
+}
+
+.creator-card--tiktok .creator-card__mark--network {
+  filter: drop-shadow(-2px -2px 0 #25F4EE) drop-shadow(2px 2px 0 #FE2C55);
+  opacity: 0.85;
+}
+
+/* Textos na cor da rede ficam um pouco mais claros para manter contraste sobre o fundo escuro */
+.creator-card--network .creator-card__pet,
+.creator-card--network .creator-card__link,
+.creator-card--network:hover .creator-card__link {
+  color: color-mix(in srgb, var(--accent) 65%, #ffffff);
+}

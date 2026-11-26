@@ -709,16 +709,38 @@ const inkFor = (hex) => {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? '#202f29' : '#ffffff';
 };
 
-// Cartão da faixa: creator (colorido pela rede escolhida) ou exemplo de layout (lista vazia).
+// Cor de destaque por rede. Redes com marca preta (TikTok, X, Threads) usam a cor secundária da marca,
+// para o cartão não ficar apagado sobre o fundo escuro.
+const networkAccent = { tiktok: '#25F4EE', x: '#e7e9ea', threads: '#e7e9ea' };
+
+const networkTheme = (network) => {
+  if (!network) return { className: '', style: undefined };
+  const accent = networkAccent[network.slug] || network.hex;
+  return {
+    className: `creator-card--network creator-card--${network.slug}`,
+    style: { '--brand': network.hex, '--brand-ink': inkFor(network.hex), '--accent': accent, '--accent-ink': inkFor(accent) },
+  };
+};
+
+const NetworkBadge = ({ network }) => (
+  <span className="creator-card__network">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d={network.path} /></svg>
+    {network.name}
+  </span>
+);
+
+// Cartão da faixa: todo o estilo (capa, fundo, borda, avatar, selo e link) segue a rede social do creator.
+// Sem creators cadastrados, os cartões "Exemplo de layout" mostram o visual de cada rede.
+const templateNetworks = ['instagram', 'tiktok', 'youtube', 'facebook'];
+
 function CreatorCard({ item }) {
   if (item.kind === 'creator') {
     const unitName = units[item.unit]?.shortName;
     const unitId = item.unit === 'mar' ? 'mar' : 'serra';
     const network = findNetwork(item.network);
-    const theme = network ? `creator-card--network creator-card--${network.slug}` : `creator-card--${unitId}`;
-    const brandStyle = network ? { '--brand': network.hex, '--brand-ink': inkFor(network.hex) } : undefined;
+    const theme = networkTheme(network);
     return (
-      <article className={`creator-card ${theme}`} style={brandStyle}>
+      <article className={`creator-card ${network ? theme.className : `creator-card--${unitId}`}`} style={theme.style}>
         <div className="creator-card__cover" aria-hidden="true">
           {item.demo && <span className="creator-card__tag">Prévia · fictício</span>}
           {network
@@ -728,7 +750,8 @@ function CreatorCard({ item }) {
         <div className="creator-card__avatar">{item.avatar ? <img src={item.avatar} alt="" width="64" height="64" loading="lazy" decoding="async" /> : initialsOf(item.name)}</div>
         <div className="creator-card__body">
           <h4 className="creator-card__name">{item.name}</h4>
-          <p className="creator-card__handle">{item.handle}{item.network ? ` · ${item.network}` : ''}</p>
+          <p className="creator-card__handle">{item.handle}</p>
+          {network ? <NetworkBadge network={network} /> : item.network && <p className="creator-card__handle">{item.network}</p>}
           {item.pet && <p className="creator-card__pet"><Icon name="paw" /> com {item.pet}</p>}
           {item.quote && <blockquote className="creator-card__quote"><p>{item.quote}</p></blockquote>}
         </div>
@@ -741,13 +764,19 @@ function CreatorCard({ item }) {
   }
 
   if (item.kind === 'template') {
+    const network = findNetwork(item.network);
+    const theme = networkTheme(network);
     return (
-      <article className="creator-card creator-card--template">
-        <div className="creator-card__cover"><span className="creator-card__tag">Exemplo de layout</span></div>
+      <article className={`creator-card creator-card--template ${theme.className}`} style={theme.style}>
+        <div className="creator-card__cover">
+          <span className="creator-card__tag">Exemplo de layout</span>
+          {network && <svg className="creator-card__mark creator-card__mark--network" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d={network.path} /></svg>}
+        </div>
         <div className="creator-card__avatar"><Icon name="paw" /></div>
         <div className="creator-card__body">
           <h4 className="creator-card__name">Nome do creator</h4>
-          <p className="creator-card__handle">@perfil · rede</p>
+          <p className="creator-card__handle">@perfil</p>
+          {network && <NetworkBadge network={network} />}
           <p className="creator-card__pet"><Icon name="paw" /> com nome do pet</p>
           <blockquote className="creator-card__quote"><p>{templateQuote}</p></blockquote>
         </div>
@@ -767,7 +796,7 @@ function CreatorMarquee() {
   const source = hasCreators ? creators : showDemo ? demoCreators : [];
   const base = source.length
     ? source.map((creator) => ({ ...creator, kind: 'creator', demo: showDemo, id: creator.handle || creator.name }))
-    : Array.from({ length: 4 }, (_, index) => ({ kind: 'template', id: `exemplo-${index}` }));
+    : templateNetworks.map((network) => ({ kind: 'template', network, id: `exemplo-${network}` }));
   // Repete os cartões até cobrir telas largas; a segunda cópia fecha o loop infinito.
   const row = Array.from({ length: Math.max(base.length, 8) }, (_, index) => base[index % base.length]);
   // Poucas redes: repete a lista para a faixa cobrir telas largas sem buracos no loop.
