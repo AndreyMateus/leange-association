@@ -731,7 +731,7 @@ const NetworkBadge = ({ network }) => (
 
 // Cartão da faixa: todo o estilo (capa, fundo, borda, avatar, selo e link) segue a rede social do creator.
 // Sem creators cadastrados, os cartões "Exemplo de layout" mostram o visual de cada rede.
-const templateNetworks = ['instagram', 'tiktok', 'youtube', 'facebook'];
+const templateNetworks = ['instagram', 'tiktok', 'youtube', 'facebook', 'pinterest', 'snapchat'];
 
 function CreatorCard({ item }) {
   if (item.kind === 'creator') {

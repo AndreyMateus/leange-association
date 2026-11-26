@@ -3670,3 +3670,161 @@ button.site-nav__cta {
 .creator-card--network:hover .creator-card__link {
   color: color-mix(in srgb, var(--accent) 65%, #ffffff);
 }
+
+/* ===== Cards com a "pele" de cada rede (cores oficiais das marcas) =====
+   Cada rede define fundo, texto, capa, avatar, selo e destaques. Redes sem pele própria
+   usam o padrão tingido abaixo. */
+.creator-card--network {
+  --card-bg: linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, #1b2723) 0%, #1b2723 75%);
+  --card-ink: #ffffff;
+  --card-muted: rgb(255 255 255 / 72%);
+  --card-border: color-mix(in srgb, var(--accent) 50%, transparent);
+  --card-hover-border: var(--accent);
+  --cover-bg: radial-gradient(circle at 85% 20%, rgb(255 255 255 / 28%), transparent 45%), linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 62%, #ffffff));
+  --cover-icon: #ffffff;
+  --avatar-bg: var(--brand);
+  --avatar-ink: var(--brand-ink);
+  --avatar-ring: #1b2723;
+  --chip-bg: var(--accent);
+  --chip-ink: var(--accent-ink);
+  --highlight: color-mix(in srgb, var(--accent) 65%, #ffffff);
+  --unit-bg: rgb(255 255 255 / 14%);
+  --unit-ink: #ffffff;
+  border-color: var(--card-border);
+  background: var(--card-bg);
+  color: var(--card-ink);
+}
+
+.creator-card--network:hover,
+.creator-card--network:focus-within {
+  border-color: var(--card-hover-border);
+  background: var(--card-bg);
+}
+
+.creator-card--network .creator-card__cover { background: var(--cover-bg); }
+.creator-card--network .creator-card__mark--network { color: var(--cover-icon); opacity: 0.85; }
+.creator-card--network .creator-card__avatar { border-color: var(--avatar-ring); background: var(--avatar-bg); color: var(--avatar-ink); }
+.creator-card--network .creator-card__name { color: var(--card-ink); }
+.creator-card--network .creator-card__handle { color: var(--card-muted); }
+.creator-card--network .creator-card__quote p { color: var(--card-ink); }
+.creator-card--network .creator-card__quote p::before,
+.creator-card--network .creator-card__pet,
+.creator-card--network .creator-card__link,
+.creator-card--network:hover .creator-card__link { color: var(--highlight); }
+.creator-card--network .creator-card__network { background: var(--chip-bg); color: var(--chip-ink); }
+.creator-card--network .creator-card__unit { background: var(--unit-bg); color: var(--unit-ink); }
+
+/* Instagram: o degradê oficial ocupa o card inteiro */
+.creator-card--instagram {
+  --card-bg: linear-gradient(165deg, #feda75 -12%, #fa7e1e 16%, #d62976 46%, #962fbf 76%, #4f5bd5 108%);
+  --card-border: transparent;
+  --card-hover-border: #ffffff;
+  --card-muted: rgb(255 255 255 / 86%);
+  --cover-bg: rgb(255 255 255 / 14%);
+  --avatar-bg: #ffffff;
+  --avatar-ink: #d62976;
+  --avatar-ring: #fa7e1e;
+  --chip-bg: #ffffff;
+  --chip-ink: #c13584;
+  --highlight: #ffffff;
+  --unit-bg: rgb(255 255 255 / 22%);
+}
+
+.creator-card--instagram .creator-card__network { background: #ffffff; color: #c13584; }
+
+/* TikTok: preto oficial com o ciano e o vermelho da marca */
+.creator-card--tiktok {
+  --card-bg: #010101;
+  --cover-bg: radial-gradient(circle at 15% 110%, rgb(254 44 85 / 75%), transparent 45%), radial-gradient(circle at 95% 0%, rgb(37 244 238 / 70%), transparent 45%), #010101;
+  --card-muted: #a1a2a7;
+  --card-border: rgb(37 244 238 / 45%);
+  --card-hover-border: #fe2c55;
+  --avatar-bg: #010101;
+  --avatar-ink: #ffffff;
+  --avatar-ring: #010101;
+  --chip-bg: #fe2c55;
+  --chip-ink: #ffffff;
+  --highlight: #25f4ee;
+  --unit-bg: rgb(255 255 255 / 12%);
+}
+
+.creator-card--tiktok .creator-card__quote p::before { color: #fe2c55; }
+
+/* YouTube: tema escuro oficial (#0F0F0F) com o vermelho da marca */
+.creator-card--youtube {
+  --card-bg: #0f0f0f;
+  --card-ink: #f1f1f1;
+  --card-muted: #aaaaaa;
+  --card-border: #303030;
+  --card-hover-border: #ff0000;
+  --cover-bg: #ff0000;
+  --avatar-bg: #ff0000;
+  --avatar-ink: #ffffff;
+  --avatar-ring: #0f0f0f;
+  --chip-bg: #ff0000;
+  --chip-ink: #ffffff;
+  --highlight: #ff4e45;
+  --unit-bg: #272727;
+  --unit-ink: #f1f1f1;
+}
+
+/* Facebook: superfície branca com o azul oficial (#0866FF) */
+.creator-card--facebook {
+  --card-bg: #ffffff;
+  --card-ink: #050505;
+  --card-muted: #65676b;
+  --card-border: #dadde1;
+  --card-hover-border: #0866ff;
+  --cover-bg: #0866ff;
+  --avatar-bg: #0866ff;
+  --avatar-ink: #ffffff;
+  --avatar-ring: #ffffff;
+  --chip-bg: #0866ff;
+  --chip-ink: #ffffff;
+  --highlight: #0866ff;
+  --unit-bg: #e4e6eb;
+  --unit-ink: #050505;
+}
+
+/* Pinterest: branco com o vermelho oficial (#E60023) */
+.creator-card--pinterest {
+  --card-bg: #ffffff;
+  --card-ink: #111111;
+  --card-muted: #767676;
+  --card-border: #efefef;
+  --card-hover-border: #e60023;
+  --cover-bg: #e60023;
+  --avatar-bg: #e60023;
+  --avatar-ink: #ffffff;
+  --avatar-ring: #ffffff;
+  --chip-bg: #e60023;
+  --chip-ink: #ffffff;
+  --highlight: #e60023;
+  --unit-bg: #efefef;
+  --unit-ink: #111111;
+}
+
+/* Snapchat: o amarelo oficial (#FFFC00) com preto */
+.creator-card--snapchat {
+  --card-bg: #fffc00;
+  --card-ink: #000000;
+  --card-muted: rgb(0 0 0 / 68%);
+  --card-border: rgb(0 0 0 / 18%);
+  --card-hover-border: #000000;
+  --cover-bg: #000000;
+  --cover-icon: #fffc00;
+  --avatar-bg: #000000;
+  --avatar-ink: #fffc00;
+  --avatar-ring: #fffc00;
+  --chip-bg: #000000;
+  --chip-ink: #fffc00;
+  --highlight: #000000;
+  --unit-bg: rgb(0 0 0 / 10%);
+  --unit-ink: #000000;
+}
+
+/* Selo "Exemplo de layout" / "Prévia" legível em qualquer pele */
+.creator-card--network .creator-card__tag {
+  background: rgb(0 0 0 / 55%);
+  color: #ffffff;
+}
