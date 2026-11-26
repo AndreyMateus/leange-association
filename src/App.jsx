@@ -709,9 +709,9 @@ const inkFor = (hex) => {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? '#202f29' : '#ffffff';
 };
 
-// Cor de destaque por rede. Redes com marca preta (TikTok, X, Threads) usam a cor secundária da marca,
-// para o cartão não ficar apagado sobre o fundo escuro.
-const networkAccent = { tiktok: '#25F4EE', x: '#e7e9ea', threads: '#e7e9ea' };
+// Redes com estilo próprio nos cartões: Instagram, TikTok, YouTube, Facebook e Snapchat.
+// O TikTok tem marca preta, então os destaques usam o ciano da marca.
+const networkAccent = { tiktok: '#25F4EE' };
 
 const networkTheme = (network) => {
   if (!network) return { className: '', style: undefined };
@@ -731,7 +731,7 @@ const NetworkBadge = ({ network }) => (
 
 // Cartão da faixa: todo o estilo (capa, fundo, borda, avatar, selo e link) segue a rede social do creator.
 // Sem creators cadastrados, os cartões "Exemplo de layout" mostram o visual de cada rede.
-const templateNetworks = ['instagram', 'tiktok', 'youtube', 'facebook', 'pinterest', 'snapchat'];
+const templateNetworks = ['instagram', 'tiktok', 'youtube', 'facebook', 'snapchat'];
 
 function CreatorCard({ item }) {
   if (item.kind === 'creator') {

@@ -3672,8 +3672,8 @@ button.site-nav__cta {
 }
 
 /* ===== Cards com a "pele" de cada rede (cores oficiais das marcas) =====
-   Cada rede define fundo, texto, capa, avatar, selo e destaques. Redes sem pele própria
-   usam o padrão tingido abaixo. */
+   Estilos ativos: Instagram, TikTok, YouTube, Facebook e Snapchat. Cada rede define fundo, texto,
+   capa, avatar, selo e destaques sobre a base abaixo. */
 .creator-card--network {
   --card-bg: linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, #1b2723) 0%, #1b2723 75%);
   --card-ink: #ffffff;
@@ -3784,24 +3784,6 @@ button.site-nav__cta {
   --highlight: #0866ff;
   --unit-bg: #e4e6eb;
   --unit-ink: #050505;
-}
-
-/* Pinterest: branco com o vermelho oficial (#E60023) */
-.creator-card--pinterest {
-  --card-bg: #ffffff;
-  --card-ink: #111111;
-  --card-muted: #767676;
-  --card-border: #efefef;
-  --card-hover-border: #e60023;
-  --cover-bg: #e60023;
-  --avatar-bg: #e60023;
-  --avatar-ink: #ffffff;
-  --avatar-ring: #ffffff;
-  --chip-bg: #e60023;
-  --chip-ink: #ffffff;
-  --highlight: #e60023;
-  --unit-bg: #efefef;
-  --unit-ink: #111111;
 }
 
 /* Snapchat: o amarelo oficial (#FFFC00) com preto */
