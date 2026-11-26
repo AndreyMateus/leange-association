@@ -13,12 +13,6 @@ export const pages = {
     description: 'Conheça a Le Ange Mar em Búzios: Praia Rasa a cerca de 150 metros, piscina com vista para o oceano e uma parceria remunerada para creators pet.',
     image: 'https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/e0715e71-0836-4817-640d-a92472a02600/public',
   },
-  '/candidatura/mar': {
-    title: 'Candidatura Le Ange Mar | Programa Creators',
-    description: 'Apresente seu perfil e converse com a equipe sobre uma parceria remunerada com a Le Ange Mar.',
-    image: 'https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/e0715e71-0836-4817-640d-a92472a02600/public',
-    noIndex: true,
-  },
 };
 
 export const indexablePaths = Object.keys(pages).filter((path) => !pages[path].noIndex);

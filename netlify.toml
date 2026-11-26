@@ -14,16 +14,28 @@
   status = 302
   force = true
 
-# A página de candidatura da Serra foi removida: o formulário fica na landing.
+# As páginas de candidatura foram removidas: a candidatura é feita pelo WhatsApp.
 [[redirects]]
   from = "/candidatura/serra"
-  to = "/serra?secao=candidatura"
+  to = "/serra"
   status = 301
   force = true
 
 [[redirects]]
   from = "/candidatura/serra/"
-  to = "/serra?secao=candidatura"
+  to = "/serra"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/candidatura/mar"
+  to = "/mar"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/candidatura/mar/"
+  to = "/mar"
   status = 301
   force = true
 

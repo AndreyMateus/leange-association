@@ -125,7 +125,7 @@ const faqItems = [
   },
   {
     question: 'Como envio meu perfil para a equipe?',
-    answer: 'Preencha sua candidatura na página indicada pelo botão ao final desta landing. O formulário prepara uma mensagem no WhatsApp para você revisar e enviar.',
+    answer: 'Toque em "Seja parceiro" ou em "Quero criar na Serra / no Mar". O WhatsApp abre com uma mensagem pronta para você completar com seu nome, seu perfil, sua rede principal e seu pet, revisar e enviar à equipe.',
   },
   {
     question: 'Quais conteúdos e entregas posso propor?',
@@ -214,7 +214,7 @@ function UnitSlide({ unitId, index }) {
             {details.highlights.slice(0, 3).map((item) => <li key={item}><Icon name="check" /> {item}</li>)}
           </ul>
           <div className="unit-slide__actions">
-            <a className={`button button--cta button--cta-${unitId}`} href={`/${unitId}?secao=candidatura`} data-scroll-to="candidatura" data-unit={unitId}><span className="button__coin" aria-hidden="true"><Icon name="coin" /></span>Quero criar {unitId === 'mar' ? 'no Mar' : 'na Serra'} <Icon name="arrow" /></a>
+            <a className={`button button--cta button--cta-${unitId}`} {...partnershipLink(unit.name)}><span className="button__coin" aria-hidden="true"><Icon name="coin" /></span>Quero criar {unitId === 'mar' ? 'no Mar' : 'na Serra'} <Icon name="arrow" /></a>
             <a className="unit-slide__link" href={unit.petPolicy} target="_blank" rel="noopener noreferrer">Política pet</a>
           </div>
         </div>
@@ -479,7 +479,7 @@ function FrequentlyAskedQuestions({ unit }) {
         <header className="faq-intro" {...flowt('float-right')}>
           <p className="eyebrow eyebrow--green"><span className="eyebrow__dot"></span> Antes de dar o próximo passo</p>
           <h2 id="faq-title">Dúvidas <em>frequentes.</em></h2>
-          <p>Se ainda ficar alguma dúvida, o chatbot pode ajudar com respostas rápidas. Para conversar sobre a candidatura, use o botão no final da página.</p>
+          <p>Se ainda ficar alguma dúvida, o chatbot pode ajudar com respostas rápidas. Para apresentar seu perfil, use o botão "Seja parceiro" e fale com a equipe pelo WhatsApp.</p>
         </header>
         <div className="faq-list">
           {faqItems.map((item, index) => (
@@ -818,43 +818,22 @@ function PartnershipSection({ unit, applyLink }) {
   );
 }
 
-// Formulário de candidatura: fica na própria landing (seção "candidatura").
-// A pessoa escolhe a unidade no formulário; o padrão é a unidade da página.
-function ApplicationSection({ unit, onSubmit, whatsAppDraft, standalone = false }) {
-  const Title = standalone ? 'h1' : 'h2';
-  return (
-    <section className="application-section section-pad" id="candidatura" data-scroll-section="candidatura" aria-labelledby="application-title">
-      <div className="application-grid page-shell">
-        <div className="application-copy">
-          <p className="eyebrow eyebrow--green"><span className="eyebrow__dot"></span> Um primeiro passo, sem complicação</p>
-          <Title id="application-title">Vamos imaginar essa parceria <em>juntos?</em></Title>
-          <p>Conte um pouco sobre você e seu conteúdo. Nossa equipe conversa com você sobre unidade, formato, disponibilidade e remuneração.</p>
-          <ol className="next-steps">
-            <li><span>1</span><span><strong>Você se apresenta</strong><small>Compartilhe seu perfil e o tipo de conteúdo que cria.</small></span></li>
-            <li><span>2</span><span><strong>A gente conversa</strong><small>Alinhamos os detalhes e as possibilidades de parceria.</small></span></li>
-            <li><span>3</span><span><strong>Se fizer sentido para ambos</strong><small>Combinamos a experiência e as postagens antes de confirmar.</small></span></li>
-          </ol>
-          <p className="application-privacy">A mensagem ficará preenchida no WhatsApp para você revisar antes de enviá-la à equipe.</p>
-        </div>
-        <form className="creator-form" onSubmit={onSubmit}>
-          <div className="creator-form__heading"><span className="form-icon"><Icon name="paw" /></span><div><p>PROGRAMA LE ANGE CREATORS</p><h3>Conte sua história</h3></div></div>
-          <div className="form-field"><label htmlFor="unit">Unidade de interesse</label><select id="unit" name="unidade" defaultValue={unit.name}>{Object.values(units).map((item) => <option key={item.id} value={item.name}>{item.name} · {item.place}</option>)}</select></div>
-          <div className="form-field"><label htmlFor="name">Como podemos chamar você?</label><input id="name" name="nome" autoComplete="name" placeholder="Seu nome" required /></div>
-          <div className="form-row">
-            <div className="form-field"><label htmlFor="whatsapp">Seu WhatsApp</label><input id="whatsapp" name="whatsapp" type="tel" autoComplete="tel" placeholder="(00) 00000-0000" required /></div>
-            <div className="form-field"><label htmlFor="network">Rede principal</label><select id="network" name="rede" defaultValue="Instagram"><option>Instagram</option><option>TikTok</option><option>YouTube</option><option>Outra</option></select></div>
-          </div>
-          <div className="form-field"><label htmlFor="profile">Seu @ ou link do perfil</label><input id="profile" name="perfil" placeholder="@seuperfil" required /></div>
-          <div className="form-field"><label htmlFor="pet">Quem é seu companheiro de conteúdo?</label><input id="pet" name="pet" placeholder="Nome e tipo de pet (opcional)" /></div>
-          <div className="form-field"><label htmlFor="content">Que tipo de história vocês gostam de contar?</label><textarea id="content" name="conteudo" rows="3" placeholder="Viagens, rotina, aventuras... (opcional)"></textarea></div>
-          <button className="button button--dark button--submit" type="submit">Continuar pelo WhatsApp <Icon name="arrow" /></button>
-          <p className="form-consent">A candidatura não confirma a parceria. Os detalhes são combinados com a equipe Le Ange.</p>
-          {whatsAppDraft && <p className="application-handoff" role="status">Sua mensagem está pronta. Revise e envie pelo WhatsApp. Se a nova aba não abriu, <a href={whatsAppDraft} target="_blank" rel="noreferrer">abra o WhatsApp por este link</a>.</p>}
-        </form>
-      </div>
-    </section>
-  );
-}
+// Candidatura pelo WhatsApp: os botões de parceria abrem uma mensagem pronta para a pessoa completar e enviar.
+const partnershipMessage = (unitName) => [
+  'Oi, Le Ange! Sou creator pet e quero conversar sobre a parceria remunerada.',
+  '',
+  `Unidade de interesse: ${unitName}`,
+  'Meu nome: ',
+  'Meu perfil (@ ou link): ',
+  'Rede principal: ',
+  'Meu pet: ',
+].join('\n');
+
+const partnershipLink = (unitName) => ({
+  href: `https://wa.me/${whatsAppNumber}?text=${encodeURIComponent(partnershipMessage(unitName))}`,
+  target: '_blank',
+  rel: 'noopener noreferrer',
+});
 
 // Rolagem feita em JavaScript (sem âncoras #id na URL): anima com requestAnimationFrame,
 // desconta o menu fixo, respeita movimento reduzido e para se a pessoa rolar por conta própria.
@@ -900,11 +879,10 @@ function scrollToSection(id, { focus = true } = {}) {
   return true;
 }
 
-function App({ initialUnit = 'serra', applicationPage = false }) {
+function App({ initialUnit = 'serra' }) {
   const selected = initialUnit === 'mar' ? 'mar' : 'serra';
   const unit = units[selected];
   const images = photos[selected];
-  const [whatsAppDraft, setWhatsAppDraft] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef(null);
 
@@ -964,14 +942,9 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
     const handleScrollLink = (event) => {
       const link = event.target.closest('[data-scroll-to]');
       if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      // Na página de candidatura a seção não existe: o link segue para /serra?secao=..., que rola ao carregar.
       const section = link.dataset.scrollTo;
       if (!document.querySelector(`[data-scroll-section="${section}"]`) && !document.getElementById(section)) return;
       event.preventDefault();
-      if (link.dataset.unit) {
-        const unitSelect = document.querySelector('#unit');
-        if (unitSelect) unitSelect.value = units[link.dataset.unit]?.name || unitSelect.value;
-      }
       scrollToSection(section);
     };
 
@@ -1062,25 +1035,6 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
     };
   }, []);
 
-  function handleApplication(event) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const lines = [
-      'Oi, Le Ange! Quero conversar sobre uma parceria como creator pet.',
-      '',
-      `Unidade de interesse: ${form.get('unidade') || unit.name}`,
-      `Meu nome: ${form.get('nome')}`,
-      `Meu WhatsApp: ${form.get('whatsapp')}`,
-      `Meu perfil: ${form.get('perfil')}`,
-      `Rede principal: ${form.get('rede')}`,
-      `Meu pet: ${form.get('pet') || 'Prefiro contar na conversa'}`,
-      `Sobre meu conteúdo: ${form.get('conteudo') || 'Vou explicar na conversa'}`,
-    ];
-    const destination = `https://wa.me/5521994230871?text=${encodeURIComponent(lines.join('\n'))}`;
-    window.open(destination, '_blank', 'noopener,noreferrer');
-    setWhatsAppDraft(destination);
-  }
-
   return (
     <>
       <a className="skip-link" {...scrollLink('conteudo')}>Pular para o conteúdo</a>
@@ -1088,7 +1042,7 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
       <header className="site-header">
         <div className="site-header__inner page-shell">
           <nav className={`site-nav${menuOpen ? ' is-open' : ''}`} aria-label="Navegação principal" ref={navRef}>
-            <a className="brand" href={`/${selected}`} onClick={(event) => { if (applicationPage || event.metaKey || event.ctrlKey) return; event.preventDefault(); setMenuOpen(false); animateScrollTo(0); }} aria-label="Le Ange Creators, início">
+            <a className="brand" href={`/${selected}`} onClick={(event) => { if (event.metaKey || event.ctrlKey) return; event.preventDefault(); setMenuOpen(false); animateScrollTo(0); }} aria-label="Le Ange Creators, início">
               <span className="brand__mark"><img src={brandIcon} alt="" width="40" height="40" /></span>
             </a>
             <button
@@ -1108,17 +1062,16 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
                 <li key={section}><button type="button" className="site-nav__link" data-section={section} onClick={() => goToSection(section)}>{label}</button></li>
               ))}
             </ul>
-            <button type="button" className="site-nav__cta" onClick={() => goToSection('candidatura')}>
+            <a className="site-nav__cta" {...partnershipLink(unit.name)} onClick={() => setMenuOpen(false)}>
               <span className="site-nav__coin" aria-hidden="true"><Icon name="coin" /></span>
               <span>Seja parceiro</span>
-            </button>
+            </a>
             </div>
           </nav>
         </div>
       </header>
 
       <main id="conteudo" data-scroll-section="conteudo">
-        {applicationPage ? <ApplicationSection unit={unit} onSubmit={handleApplication} whatsAppDraft={whatsAppDraft} standalone /> : <>
         <section className="brand-story section-pad" id="quem-somos" data-scroll-section="quem-somos" aria-labelledby="brand-story-title">
           <div className="brand-story__inner page-shell">
             <div className="brand-story__copy">
@@ -1126,7 +1079,7 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
               <p>Nascida em Miguel Pereira em 2018 e presente em Búzios desde 2023, a Le Ange se posiciona como a pousada mais Pet Friendly do Brasil: aqui, tutores e pets vivem a viagem juntos, nas áreas de lazer e convivência.</p>
               <p>Agora queremos contar essas histórias com quem cria conteúdo. Como creator parceiro, você mostra a experiência Le Ange com a sua voz e o seu pet, e <strong className="business-rule-highlight">recebe pelas postagens combinadas</strong> com a nossa equipe.</p>
               <div className="brand-story__actions">
-                <a className="button button--cta" {...scrollLink('candidatura')}><span className="button__coin" aria-hidden="true"><Icon name="coin" /></span>Quero ser parceiro <Icon name="arrow" /></a>
+                <a className="button button--cta" {...partnershipLink(unit.name)}><span className="button__coin" aria-hidden="true"><Icon name="coin" /></span>Quero ser parceiro <Icon name="arrow" /></a>
               </div>
             </div>
             <RecordingPhone unit={unit} image={images.story} />
@@ -1135,12 +1088,10 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
         <PhotoGrid unit={unit} />
         <UnitScroller />
 
-        <PartnershipSection unit={unit} applyLink={scrollLink('candidatura')} />
+        <PartnershipSection unit={unit} applyLink={partnershipLink(unit.name)} />
 
         <FrequentlyAskedQuestions unit={unit} />
 
-        <ApplicationSection unit={unit} onSubmit={handleApplication} whatsAppDraft={whatsAppDraft} />
-        </>}
       </main>
 
       <footer className="site-footer">
@@ -1152,7 +1103,7 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
                 <li><a {...scrollLink('quem-somos')}>Quem somos</a></li>
                 <li><a {...scrollLink('vantagens')}>A parceria</a></li>
                 <li><a {...scrollLink('duvidas')}>Dúvidas frequentes</a></li>
-                <li><a {...scrollLink('candidatura')}>Candidatar-se</a></li>
+                <li><a {...partnershipLink(unit.name)}>Candidatar-se pelo WhatsApp</a></li>
               </ul>
               <ul className="site-footer__list site-footer__list--muted">
                 <li><a href="/serra">Le Ange Serra</a></li>
@@ -1195,7 +1146,7 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
       </footer>
       <button
         type="button"
-        className={`back-to-top${applicationPage ? ' back-to-top--alone' : ''}`}
+        className="back-to-top"
         aria-label="Voltar ao topo"
         onClick={() => {
           animateScrollTo(0);
@@ -1204,7 +1155,7 @@ function App({ initialUnit = 'serra', applicationPage = false }) {
       >
         <Icon name="arrow" />
       </button>
-      {!applicationPage && <FrequentlyAskedChatbot unit={unit} />}
+      <FrequentlyAskedChatbot unit={unit} />
     </>
   );
 }

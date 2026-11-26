@@ -1,6 +1,6 @@
 // Pré-renderização para hospedagem estática (Netlify, Vercel e similares).
 // Depois do build do Vite, gera o HTML completo de cada página dentro de dist/client:
-//   dist/client/serra/index.html, dist/client/mar/index.html, dist/client/candidatura/mar/index.html
+//   dist/client/serra/index.html e dist/client/mar/index.html
 // além de robots.txt, sitemap.xml (quando houver domínio) e 404.html.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';

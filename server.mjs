@@ -78,10 +78,11 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  // A página /candidatura/serra foi removida: o formulário agora fica na própria landing.
-  if (requestUrl.pathname.replace(/\/+$/, '') === '/candidatura/serra') {
+  // As páginas de candidatura foram removidas: a candidatura é feita pelo WhatsApp a partir da landing.
+  const candidaturaMatch = requestUrl.pathname.replace(/\/+$/, '').match(/^\/candidatura\/(serra|mar)$/);
+  if (candidaturaMatch) {
     response.statusCode = 301;
-    response.setHeader('location', '/serra?secao=candidatura');
+    response.setHeader('location', `/${candidaturaMatch[1]}`);
     response.end();
     return;
   }
