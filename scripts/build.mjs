@@ -14,3 +14,6 @@ await build({
 });
 
 console.log('Client and server-rendered builds created in dist/.');
+
+// Gera as páginas estáticas em dist/client para Netlify/Vercel.
+await import('./prerender.mjs');

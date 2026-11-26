@@ -1,6 +1,6 @@
 # Le Ange Creators
 
-Landing page de captação de creators pet para as unidades Le Ange Serra e Le Ange Mar. A abertura apresenta a história da marca e um carrossel com sete fotografias. As rotas `/serra` e `/mar` servem páginas próprias renderizadas no servidor; o formulário fica em `/candidatura/serra` e `/candidatura/mar`.
+Landing page de captação de creators pet para as unidades Le Ange Serra e Le Ange Mar. A abertura apresenta a história da marca e um carrossel com sete fotografias. As rotas `/serra` e `/mar` servem páginas próprias renderizadas no servidor; o formulário de candidatura fica na própria landing (seção final), com a unidade escolhida no próprio formulário; `/candidatura/serra` redireciona para `/serra?secao=candidatura` e `/candidatura/mar` continua existindo como página avulsa.
 
 ## Tecnologias e versões
 
@@ -97,7 +97,7 @@ Tons auxiliares de papel, creme e verde-escuro aparecem como variáveis compleme
 - Botões: cantos de `3px` (`--border-radius-btn`), área de toque confortável e estados de hover e foco.
 - Campos: rótulos visíveis, entradas nativas, estados de foco e mensagens claras sobre o próximo passo.
 - Navegação: cápsula flutuante com a marca, três links (Quem somos, Parceria, Dúvidas) num trilho com indicador verde que desliza até a seção visível, e o botão "Seja parceiro" com moeda. No celular ficam só os três links, sem menu escondido. Atalho para pular ao conteúdo.
-- Rolagem: toda navegação interna é feita em JavaScript (`scrollToSection` / `animateScrollTo` em `src/App.jsx`), sem âncoras `#id` na URL. Os links levam `data-scroll-to` e um `href` de reserva (`/serra?secao=duvidas`); ao abrir uma URL com `?secao=` (ou um `#id` antigo), a página rola até a seção e limpa o endereço. A animação desconta o menu fixo, para se a pessoa rolar por conta própria e respeita movimento reduzido.
+- Rolagem: os itens do menu são botões que rolam por JavaScript até a seção marcada com `data-scroll-section` (sem `href` com âncora); toda navegação interna é feita em JavaScript (`scrollToSection` / `animateScrollTo` em `src/App.jsx`), sem âncoras `#id` na URL. Os links levam `data-scroll-to` e um `href` de reserva (`/serra?secao=duvidas`); ao abrir uma URL com `?secao=` (ou um `#id` antigo), a página rola até a seção e limpa o endereço. A animação desconta o menu fixo, para se a pessoa rolar por conta própria e respeita movimento reduzido.
 - Rodapé: quatro colunas (Le Ange Creators, Precisa de mais informações?, Também estamos nas redes, Fale com a gente) com divisórias pontilhadas e linha final com a marca, o selo da parceria e o copyright.
 - Cartões e imagens: bordas suaves, fotografia ampla e legendas com contraste. Os tratamentos de imagem respeitam a proporção e se ajustam ao espaço disponível.
 - Movimento: animações de entrada na rolagem feitas com a [DOM Flowt](https://github.com/Staviro/dom-flowt) 2.1.0 (MIT), copiada em `src/vendor/dom-flowt/` (não há pacote npm). Os elementos usam `dom-flowt-is-visible`, `dom-flowt-type`, `dom-flowt-duration` e `dom-flowt-repeat` pelo helper `flowt()` de `src/App.jsx`; `DomFlowt.watch()` é chamado uma vez após a hidratação. Com `prefers-reduced-motion` ou sem JavaScript, o conteúdo aparece sem animação. O atributo `dom-flowt-delay` da documentação não é lido pela v2.1.0; o atraso usa `animation-delay`.
@@ -113,7 +113,7 @@ Tons auxiliares de papel, creme e verde-escuro aparecem como variáveis compleme
 4. **Parceria remunerada** — o "Creator Pass" resume os dois passos (você divulga, você é remunerado) e, abaixo dele, uma faixa infinita passa cartões dos creators parceiros (capa e avatar na cor da rede social escolhida, com o ícone dela, a partir de `network` em `creators.js`; sem rede reconhecida, a cor da unidade; avatar, @, pet, depoimento e link do perfil), com botão para pausar. Abaixo dela, uma segunda faixa, no sentido inverso, mostra os ícones das redes usadas para marketing em vídeo com creators (Instagram, TikTok, YouTube, Facebook, Pinterest e Snapchat), definidos em `src/data/social-networks.js` a partir do [Simple Icons](https://simpleicons.org) (CC0). O Kwai, relevante para vídeo no Brasil, não tem ícone no Simple Icons e ficou de fora. Os nomes vêm de `src/data/creators.js`; só inclua quem autorizou a divulgação. Cada creator pode ter um `quote` (depoimento real, com autorização); com ele o cartão vira um depoimento. Com a lista vazia, `npm run dev` mostra uma prévia fictícia (`src/data/creators.demo.js`, marcada "Prévia · fictício", sem fotos de pessoas) e a build de produção mostra cartões "Exemplo de layout"; a prévia nunca vai para produção.
 5. **Dúvidas frequentes** — nove respostas nativas em dropdown (`#duvidas`), incluindo remuneração, entregas, custos, pagamento, uso de conteúdo e regras pet.
 6. **CTA final** — leva à página separada de candidatura da unidade selecionada.
-7. **Formulário de candidatura** — disponível em `/candidatura/serra` e `/candidatura/mar`; prepara uma mensagem de WhatsApp para revisão e envio, com link de retorno caso a abertura da nova aba seja bloqueada.
+7. **Formulário de candidatura** — última seção da landing, com campo "Unidade de interesse" (os botões "Quero criar na Serra / no Mar" já deixam a unidade selecionada); prepara uma mensagem de WhatsApp para revisão e envio, com link de retorno caso a abertura da nova aba seja bloqueada.
 8. **Chatbot** — ao abrir, mostra um menu de opções pré-definidas (ou "Quero escrever minha dúvida"). Depois da escolha, o chat fica livre: a pessoa digita e envia mensagens, com sugestões em linha e indicador de digitação. As mensagens passam por `askAssistant` em `src/chat/assistant.js`, o ponto de integração da IA; enquanto ela não existe, a resposta é um aviso honesto com botão para enviar a mesma mensagem pelo WhatsApp. O arquivo explica como ligar a IA por uma rota no servidor (a chave da API nunca vai para o navegador).
 
 ## Conteúdo e contatos
@@ -131,3 +131,16 @@ Tons auxiliares de papel, creme e verde-escuro aparecem como variáveis compleme
 - No celular: entradas da DOM Flowt viram um deslize vertical curto (380 ms), o menu não usa desfoque de fundo, o celular gravando não faz zoom contínuo e tem menos moedas, o Creator Pass não usa filtro de sombra, e os slides Serra/Mar têm percurso menor e sem escala nas fotos.
 - Em telas de toque, efeitos que dependem de hover ficam desligados.
 - CSS sem regras de seções que não existem mais (sobre, localização, mapa).
+
+## Deploy (Netlify)
+
+O site é publicado como arquivos estáticos pré-renderizados: `npm run build` compila com o Vite e, em seguida, `scripts/prerender.mjs` grava o HTML completo de `/serra`, `/mar` e `/candidatura/mar` (além de `robots.txt`, `sitemap.xml` e `404.html`) em `dist/client`. Título, descrição e Open Graph vêm de `scripts/pages.mjs`, o mesmo módulo usado pelo `server.mjs` local.
+
+| Campo no Netlify | Valor |
+| --- | --- |
+| Base directory | vazio |
+| Build command | `npm run build` |
+| Publish directory | `dist/client` |
+| Node | 22 (definido em `netlify.toml`) |
+
+Os redirecionamentos (`/` → `/serra` e `/candidatura/serra` → `/serra?secao=candidatura`) e o cache de `/assets/*` estão em `netlify.toml`. O domínio para canonical e sitemap vem de `PUBLIC_SITE_URL` ou, no Netlify, da variável `URL` definida automaticamente. O `server.mjs` continua servindo só o desenvolvimento local (`npm run dev` e `npm start`).

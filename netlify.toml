@@ -1,0 +1,38 @@
+# Netlify: site estático pré-renderizado (ver scripts/prerender.mjs).
+# Base directory: vazio (o package.json está na raiz do repositório).
+[build]
+  command = "npm run build"
+  publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# A raiz leva para a landing da Serra.
+[[redirects]]
+  from = "/"
+  to = "/serra"
+  status = 302
+  force = true
+
+# A página de candidatura da Serra foi removida: o formulário fica na landing.
+[[redirects]]
+  from = "/candidatura/serra"
+  to = "/serra?secao=candidatura"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/candidatura/serra/"
+  to = "/serra?secao=candidatura"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
