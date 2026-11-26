@@ -231,28 +231,62 @@ function UnitScroller() {
     if (!section || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
     section.classList.add('is-pinned');
     let frame = 0;
+    let settleTimer = 0;
+    let lastScrollY = window.scrollY;
+    let direction = 1;
+    let wipe = 0;
+    // Trechos parados no início (Serra) e no fim (Mar): menores no celular para a troca reagir mais rápido.
+    const mobileQuery = window.matchMedia('(max-width: 700px)');
+    const holdFraction = () => (mobileQuery.matches ? 0.08 : 0.12);
+
+    const sectionTop = () => window.scrollY + section.getBoundingClientRect().top;
+    const travel = () => section.offsetHeight - window.innerHeight;
 
     const update = () => {
       frame = 0;
-      const total = section.offsetHeight - window.innerHeight;
+      const total = travel();
       const progress = total > 0 ? Math.min(1, Math.max(0, -section.getBoundingClientRect().top / total)) : 0;
-      // 25% parado na Serra, 50% de transição, 25% parado no Mar.
-      const raw = Math.min(1, Math.max(0, (progress - 0.25) / 0.5));
-      const wipe = raw * raw * (3 - 2 * raw);
+      const hold = holdFraction();
+      const raw = Math.min(1, Math.max(0, (progress - hold) / (1 - hold * 2)));
+      wipe = raw * raw * (3 - 2 * raw);
       section.style.setProperty('--progress', progress.toFixed(4));
       section.style.setProperty('--wipe', wipe.toFixed(4));
       section.dataset.active = wipe > 0.5 ? 'mar' : 'serra';
     };
+
+    // Rolagem sensível: se a pessoa para no meio da troca, o slide termina sozinho no sentido em que ela rolou.
+    // Basta um gesto curto para ir da Serra ao Mar (ou voltar).
+    const settle = () => {
+      const total = travel();
+      const rect = section.getBoundingClientRect();
+      if (total <= 0 || rect.top > 0 || rect.bottom < window.innerHeight) return;
+      const position = -rect.top;
+      const hold = holdFraction();
+      const serraRest = total * hold;
+      const marRest = total * (1 - hold);
+      const tolerance = 6;
+      if (direction > 0 && position > serraRest * 0.5 && position < marRest - tolerance) {
+        animateScrollTo(sectionTop() + marRest);
+      } else if (direction < 0 && position < total - (total - marRest) * 0.5 && position > serraRest + tolerance) {
+        animateScrollTo(sectionTop() + serraRest);
+      }
+    };
+
     const requestUpdate = () => {
+      const y = window.scrollY;
+      if (y !== lastScrollY) direction = y > lastScrollY ? 1 : -1;
+      lastScrollY = y;
       if (!frame) frame = requestAnimationFrame(update);
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, mobileQuery.matches ? 110 : 140);
     };
     // Navegação por teclado: ao focar algo de um slide, a rolagem vai até ele ficar visível.
     const handleFocus = (event) => {
       const slide = event.target.closest('[data-slide]');
       if (!slide) return;
-      const total = section.offsetHeight - window.innerHeight;
-      const target = slide.dataset.slide === 'mar' ? 0.9 : 0.1;
-      window.scrollTo({ top: window.scrollY + section.getBoundingClientRect().top + total * target, behavior: 'auto' });
+      const hold = holdFraction();
+      const target = slide.dataset.slide === 'mar' ? 1 - hold : hold;
+      window.scrollTo({ top: sectionTop() + travel() * target, behavior: 'auto' });
     };
 
     update();
@@ -261,6 +295,7 @@ function UnitScroller() {
     section.addEventListener('focusin', handleFocus);
     return () => {
       if (frame) cancelAnimationFrame(frame);
+      clearTimeout(settleTimer);
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestUpdate);
       section.removeEventListener('focusin', handleFocus);

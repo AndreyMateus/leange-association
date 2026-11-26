@@ -2858,7 +2858,7 @@ main > section:first-child.section-pad {
 
 /* Modo fixado (ativado pelo JavaScript) */
 .unit-scroller.is-pinned {
-  height: 300vh;
+  height: 220vh;
 }
 
 .unit-scroller.is-pinned .unit-scroller__stage {
@@ -3299,7 +3299,7 @@ main > section:first-child.section-pad {
 
   /* Slides Serra/Mar: sem escala nas fotos durante a rolagem e percurso um pouco menor. */
   .unit-scroller.is-pinned {
-    height: 240vh;
+    height: 165vh;
   }
 
   .unit-scroller.is-pinned .unit-slide--serra .unit-slide__photo,
